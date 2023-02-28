@@ -5,8 +5,6 @@ import "./SimpleGovernance.sol";
 import "./SelfiePool.sol";
 import "@openzeppelin/contracts/interfaces/IERC3156FlashBorrower.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol";
-
-// import "../DamnValuableToken.sol";
 import "../DamnValuableTokenSnapshot.sol";
 
 /**
@@ -24,8 +22,6 @@ contract BadSelfie is IERC3156FlashBorrower {
     uint256 attackActionId;
     uint256 tokenAmount;
     address attacker;
-
-    //DamnValuableToken public immutable token;
 
     /**
      * Initialize pool, governance, and token
