@@ -127,6 +127,7 @@ describe("[Challenge] Free Rider", function () {
   it("Execution", async function () {
     /** CODE YOUR SOLUTION HERE */
     //setup logs
+
     const logBalances = async (address, name) => {
       const ethBalance = await ethers.provider.getBalance(address);
       const wethBalance = await weth.balanceOf(address);
@@ -152,11 +153,30 @@ describe("[Challenge] Free Rider", function () {
       }
       console.log("");
     };
-
-    //log balances of player, marketplace, uniswap
+    console.log("- - - Before Attack - - -");
     await logBalances(player.address, "player");
     await logBalances(marketplace.address, "markeplace");
-    await logBalances(uniswapFactory.address, "uniswap");
+    await logBalances(devsContract.address, "dev contract");
+
+    //get attacket contract
+    const attackerContract = await (
+      await ethers.getContractFactory("FreeRiderAttacker", player)
+    ).deploy(
+      nft.address,
+      weth.address,
+      uniswapPair.address,
+      marketplace.address,
+      devsContract.address,
+      player.address
+    );
+
+    //initiate attack
+    await attackerContract.connect(player).attack(NFT_PRICE);
+
+    //log balances of player, marketplace, uniswap
+    console.log("- - - After Attack - - - ");
+    await logBalances(player.address, "player");
+    await logBalances(marketplace.address, "markeplace");
     await logBalances(devsContract.address, "dev contract");
   });
 
